@@ -1,9 +1,8 @@
 package main
 
-import "fmt"
 import "strconv"
 
-func evalRPN(tokens []string) int {
+func evalRPN1(tokens []string) int {
 
 	funcMap := map[string]func(x, y int) int{
 		"*": func(x, y int) int { return x * y },
@@ -28,8 +27,35 @@ func evalRPN(tokens []string) int {
 	return stack[0]
 }
 
-// ["2","1","+","3","*"]
-//  ((2 + 1) * 3) = 9
-func main() {
-	fmt.Println(evalRPN([]string{"2", "1", "+", "3", "*"}))
+func evalRPN(tokens []string) int {
+	stack := []int{}
+
+	for _, token := range tokens {
+		if token == "+" {
+			r := stack[len(stack)-1]
+			l := stack[len(stack)-2]
+			stack = stack[:len(stack)-2]
+			stack = append(stack, l+r)
+		} else if token == "-" {
+			r := stack[len(stack)-1]
+			l := stack[len(stack)-2]
+			stack = stack[:len(stack)-2]
+			stack = append(stack, l-r)
+		} else if token == "*" {
+			r := stack[len(stack)-1]
+			l := stack[len(stack)-2]
+			stack = stack[:len(stack)-2]
+			stack = append(stack, l*r)
+		} else if token == "/" {
+			r := stack[len(stack)-1]
+			l := stack[len(stack)-2]
+			stack = stack[:len(stack)-2]
+			stack = append(stack, l/r)
+		} else {
+			num, _ := strconv.Atoi(token)
+			stack = append(stack, num)
+		}
+	}
+
+	return stack[0]
 }
