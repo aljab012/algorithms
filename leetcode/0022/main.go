@@ -1,18 +1,22 @@
 package main
 
 func generateParenthesis(n int) []string {
-	return helper("", 0, 0, n, []string{})
-}
+	result := []string{}
 
-func helper(s string, open int, close, n int, ret []string) []string {
-	if len(s) == n*2 {
-		ret = append(ret, s)
+	var dfs func(str string, open, close int)
+	dfs = func(str string, open, close int) {
+		if open > n || close > open {
+			return
+		}
+
+		if open == n && close == n {
+			result = append(result, str)
+		}
+
+		dfs(str+"(", open+1, close)
+		dfs(str+")", open, close+1)
 	}
-	if open < n {
-		ret = helper(s+"(", open+1, close, n, ret)
-	}
-	if close < open {
-		ret = helper(s+")", open, close+1, n, ret)
-	}
-	return ret
+	dfs("", 0, 0)
+
+	return result
 }
